@@ -64,14 +64,14 @@ void loop() {
     LED();
     SDC30(&vector); // call SDC30 function
 
-    if (digitalRead(BUTTON) == HIGH && millis() > button_timeout) {
-        button_timeout = millis() + 500;
-        displaytime = !displaytime;
+    if (digitalRead(BUTTON) == HIGH && millis() > button_timeout) { // toggle displaytime variable when button (connected to D3 and 3v3) is pressed
+        button_timeout = millis() + 500; // updated timeout, to not toggle every few milliseconds 
+        displaytime = !displaytime; // toggle variable
     }
 
-    if (millis() > last + 500 && vector.size() > 0) {
+    if (millis() > last + 500 && vector.size() > 0) { // draw screen every half a second AND when data vector is not empty
         draw(&vector, ConfigSDC30.Co2, WHITE /* aka `1` */); // draw graph and text
-        last = millis();
+        last = millis(); // update "timeout" variable
     }
 
     if (!once) { // if once is false
