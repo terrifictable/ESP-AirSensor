@@ -1,8 +1,10 @@
 #include <Arduino.h>
 #include <Wire.h>
+#include <time.h>
 #include <SPI.h>
 
 #include <iostream>
+#include <chrono>
 #include <vector>
 
 
@@ -24,6 +26,11 @@ typedef struct Value {
 
 
 
+uint BUTTON = D3;
+
+bool displaytime = false;
+
+
 // include headers
 #include "leds.hpp"
 #include "screen.hpp"
@@ -37,6 +44,8 @@ void setup() {
     
     print("Starting..."); // log
     
+    pinMode(BUTTON, INPUT);
+
     oled_init(); // initialize OLED
     DisplayText("Starting.."); // display text
     print("OLED initialized"); // log
@@ -48,9 +57,22 @@ void loop() {
     static bool once = false; // set once to false
     static std::vector<Value> vector;
 
+    static unsigned long button_timeout = millis();
+    static unsigned long last = millis();
+
+
     LED();
     SDC30(&vector); // call SDC30 function
 
+    if (digitalRead(BUTTON) == HIGH && millis() > button_timeout) {
+        button_timeout = millis() + 500;
+        displaytime = !displaytime;
+    }
+
+    if (millis() > last + 500 && vector.size() > 0) {
+        draw(&vector, ConfigSDC30.Co2, WHITE /* aka `1` */); // draw graph and text
+        last = millis();
+    }
 
     if (!once) { // if once is false
         print("SDC30 started"); // log
