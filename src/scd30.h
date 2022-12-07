@@ -91,7 +91,7 @@ void SDC30(std::vector<Value> *vector) {
 
         #ifdef DEBUG
             // Debug
-            Msg(F("SDC30"), F("TimeOUT!"));
+            // Msg(F("SDC30"), F("TimeOUT!"));
         #endif
     }
 
@@ -112,7 +112,5 @@ void SDC30(std::vector<Value> *vector) {
             airSensor.getHumidity(),
         };
         (*vector).push_back(val); // add new value to vector
-        draw(vector, ConfigSDC30.Co2, WHITE /* aka `1` */); // draw graph and text
-
     }
 }
