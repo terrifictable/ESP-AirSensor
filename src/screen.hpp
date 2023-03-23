@@ -44,14 +44,14 @@ void DisplayText(String text, int text_size = 2, int posX = 0, int posY = 0) {
 
 }
 
+
 // draw graph of co2 data and display average value
 void draw(std::vector<Value> *in, int avg, int16_t color) {
     display.clearDisplay(); // clear current display buffer
-    
+
     // remove data that is older than `x`
-    while ((*in).size() > SIZE_LIMIT) {
-        (*in).erase((*in).begin()); // remove first aka oldest entry in array/vector 
-    }
+    while ((*in).size() > SIZE_LIMIT)
+        (*in).erase((*in).begin()); // remove first (oldest) entry in array/vector 
 
     int16_t TOP           = 0;
     if (displaytime) {
@@ -59,15 +59,21 @@ void draw(std::vector<Value> *in, int avg, int16_t color) {
     }
 
     int16_t MAX           = 1; // Highest co2 value in current array
+    int16_t MIN           = 1;
     static int16_t HEIGHT = 64 - TOP; // the screen height
-    for (unsigned int i=0; i < (*in).size(); i++ ) // get highest co2 value
-        if ((*in)[i].co2 >= MAX) MAX = (*in)[i].co2; // check if value is higher than current highest, if yes update else, do nothing
-    
+    for (unsigned int i=0; i < (*in).size(); i++ ) { // get highest co2 value
+        if ((*in)[i].co2 > MAX) MAX = (*in)[i].co2; // check if value is bigger than current highest, if yes update else, do nothing
+        if ((*in)[i].co2 < MIN) MIN = (*in)[i].co2; // check if value is smaller than current highest, if yes update else, do nothing
+    }
+
     int16_t lastI = 0; // variables for last values
     int16_t lastY = (HEIGHT - ((*in)[0].co2 * HEIGHT) / MAX) + TOP; // variables for last values
+    /* DONT use linear interpolation to calculate y positions */
+    // int16_t lastY = rangeLerpC((*in)[0].co2, MIN, MAX, 0, 64);
     for (unsigned int i=0; i < (*in).size(); i++ ) { // iterate over Value array/vector
         Value val = (*in)[i]; // local `val` has the value of current index in array/vector
-        int16_t y = (HEIGHT - (val.co2 * HEIGHT) / MAX) + TOP; // calculate on what hight to draw a pixel
+        
+        int16_t y = ((HEIGHT - val.co2 * HEIGHT) / MAX) + TOP; // calculate on what hight to draw a pixel
         display.drawLine(lastI, lastY, i, y, color); // draw line from last point to new point
         lastI = i; // update values
         lastY = y; // update values
