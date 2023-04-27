@@ -1,4 +1,5 @@
 #include <Adafruit_SSD1306.h> // Include the SSD1306 library needed for OLED
+#include <algorithm>
 
 
 
@@ -58,11 +59,10 @@ void draw(std::vector<Value> *in, int avg, int16_t color) {
         TOP = 16;
     }
 
-    int16_t MAX           = 1; // Highest co2 value in current array
+    std::vector<int> co2vec{};
+    for (Value val : *in) { co2vec.push_back(val.co2); }
+    int16_t MAX           = *std::max_element(co2vec.begin(), co2vec.end()); // Highest co2 value in current array
     static int16_t HEIGHT = 64 - TOP; // the screen height
-    for (unsigned int i=0; i < (*in).size(); i++ ) { // get highest co2 value
-        if ((*in)[i].co2 > MAX) MAX = (*in)[i].co2; // check if value is bigger than current highest, if yes update else, do nothing
-    }
 
     int16_t lastY = (HEIGHT - ((*in)[0].co2 * HEIGHT) / MAX) + TOP; // variables for last values
     /* DONT use linear interpolation to calculate y positions */
