@@ -72,6 +72,8 @@ String checkCO2Values(int co2, float temperature, float humidity) { // may going
      * REALLY BAD [RED Blink] ->  >2000 qqm
      */
 
+    setBuzzer(co2);
+
     if (co2 <= MAX_GREEN_VAL) {
         SetAllLED(CRGB::Green);
         status = "Good <700";
