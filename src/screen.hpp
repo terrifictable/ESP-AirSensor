@@ -49,10 +49,11 @@ void DisplayText(String text, int text_size = 2, int posX = 0, int posY = 0) {
 // draw graph of co2 data and display average value
 void draw(std::vector<Value> *in, int avg, int16_t color) {
     display.clearDisplay(); // clear current display buffer
+    std::vector<Value> vec = *in;
 
     // remove data that is older than `x`
-    while ((*in).size() > SIZE_LIMIT)
-        (*in).erase((*in).begin()); // remove first (oldest) entry in array/vector 
+    while (vec.size() > SIZE_LIMIT)
+        vec.erase((vec).begin()); // remove first (oldest) entry in array/vector 
 
     int16_t TOP           = 0;
     if (displaytime) {
@@ -60,15 +61,15 @@ void draw(std::vector<Value> *in, int avg, int16_t color) {
     }
 
     std::vector<int> co2vec{};
-    for (Value val : *in) { co2vec.push_back(val.co2); }
+    for (Value val : vec) { co2vec.push_back(val.co2); }
     int16_t MAX           = *std::max_element(co2vec.begin(), co2vec.end()); // Highest co2 value in current array
     static int16_t HEIGHT = 64 - TOP; // the screen height
 
-    int16_t lastY = (HEIGHT - ((*in)[0].co2 * HEIGHT) / MAX) + TOP; // variables for last values
+    int16_t lastY = (HEIGHT - (vec[0].co2 * HEIGHT) / MAX) + TOP; // variables for last values
     /* DONT use linear interpolation to calculate y positions */
-    // int16_t lastY = rangeLerpC((*in)[0].co2, MIN, MAX, 0, 64);
-    for (unsigned int i=0; i < (*in).size(); i++ ) { // iterate over Value array/vector
-        int16_t y = ((HEIGHT - (*in)[i].co2 * HEIGHT) / MAX); // + TOP; // calculate on what hight to draw a pixel
+    // int16_t lastY = rangeLerpC(vec[0].co2, MIN, MAX, 0, 64);
+    for (unsigned int i=0; i < vec.size(); i++ ) { // iterate over Value array/vector
+        int16_t y = ((HEIGHT - vec[i].co2 * HEIGHT) / MAX); // + TOP; // calculate on what hight to draw a pixel
         display.drawLine(i-1, lastY + 64, i, y + 64, color); // draw line from last point to new point
         lastY = y; // update values
     }
