@@ -4,3 +4,5 @@ for extra usability also uses a lightstrip to display/categorize the CO² value
 
 
 the CO² value allways refers to the average of the last 5 collected CO² values
+
+![](img/device.jpg)
