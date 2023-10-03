@@ -5,6 +5,6 @@ for extra usability also uses a lightstrip to display/categorize the CO² value
 
 the CO² value allways refers to the average of the last 5 collected CO² values
 
-<video width="630" height="300" src="./img/video.mp4"></video>
+<video width="630" height="300" src="https://github.com/terrifictable/ESP-AirSensor/raw/main/img/video.mp4"></video>
 
 ![](img/device.jpg)
